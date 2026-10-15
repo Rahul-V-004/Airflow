@@ -1,1 +1,0 @@
-This folder is used as volume for sql to store ETL pipeline data 

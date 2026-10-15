@@ -9,12 +9,13 @@ services:
     ports:
       - "7500:3306"
     volumes:
-      - ./SQL_ETL:/var/lib/mysql
+      - ./SQL_ETL/data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot" ]
       interval: 5s
       timeout: 5s
-      retries: 10
+      retries: 30
+      start_period: 60s
 
   airflow-standalone:
     image: apache/airflow:2.9.2
