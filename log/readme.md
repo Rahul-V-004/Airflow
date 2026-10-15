@@ -1,0 +1,1 @@
+This Folder is attached as volume to store logs for Airflow container 

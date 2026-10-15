@@ -1,0 +1,35 @@
+version: '3.8'
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql_container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "7500:3306"
+    volumes:
+      - ./SQL_ETL:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  airflow-standalone:
+    image: apache/airflow:2.9.2
+    container_name: airflow_standalone_app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False # Set to False to hide tutorial DAGs
+      - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
+      - _AIRFLOW_WWW_USER_USERNAME=admin
+      - _AIRFLOW_WWW_USER_PASSWORD=rahul123
+    volumes:
+      - ./data:/opt/airflow/dags
+      - ./log:/opt/airflow/logs
+    ports:
+      - "8080:8080"
+    command: standalone
